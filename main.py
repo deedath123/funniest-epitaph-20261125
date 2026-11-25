@@ -16,11 +16,20 @@ ENTRY = (
 )
 
 
+def _validated_entry(text: str) -> str:
+    cleaned = text.strip()
+    if not cleaned:
+        raise ValueError("epitaph text must not be blank")
+    if len(text) < 10 or len(text) > 200:
+        raise ValueError("epitaph text length out of allowed bounds")
+    return text
+
+
 def main() -> None:
     output_dir = Path(os.environ.get("OUTPUT_DIR", "/output"))
     output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / "entry.txt"
-    output_path.write_text(ENTRY + "\n", encoding="utf-8")
+    output_path.write_text(_validated_entry(ENTRY) + "\n", encoding="utf-8")
 
 
 if __name__ == "__main__":
